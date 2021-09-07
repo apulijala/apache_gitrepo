@@ -1,0 +1,47 @@
+---
+# tasks file for apache 
+- name: Install Apache 
+  yum:
+    name:
+      - httpd
+    state: present
+
+- name: Enable service httpd, and not touch the state
+  service:
+    name: httpd
+    enabled: yes
+    state: started
+
+- name: Configure prod vhost config file. 
+  template:
+    src:  prod_vhost.j2
+    dest: "{{ config_file }}"
+    owner: apache
+    group: apache
+    mode: '0644'
+  notify: restart apache 
+
+
+- name: Enabled http across firewall. 
+  firewalld:
+    service: http
+    permanent: yes
+    state: enabled
+    immediate: yes 
+
+  notify: restart firewalld
+
+- stat:
+    path: "{{ index_file }}"
+  register: p
+
+
+- name: index file template. 
+  template:
+    src: index.html.j2
+    dest: "{{ index_file }}"
+    owner: apache
+    group: apache
+    mode: '0644'
+  when:  p.stat.exists is defined and not p.stat.exists
+  notify: restart apache

@@ -1,0 +1,7 @@
+---
+# vars file for apache
+
+config_dir: /etc/httpd/conf.d/
+config_file: "{{ config_dir }}/prod.vhost"
+index_dir: /var/www/html/
+index_file: "{{ index_dir }}/index.html"

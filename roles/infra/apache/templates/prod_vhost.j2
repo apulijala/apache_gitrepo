@@ -1,0 +1,10 @@
+<VirtualHost *:80>
+  ServerName {{ inventory_hostname }}
+  DocumentRoot {{ index_dir }}
+  <Directory >
+      Options FollowSymLinks # Follow the links in anytone
+      Order deny,allow # Allow from all. 
+      Allow from all  # Allow from everyone. 
+  </Directory>
+</VirtualHost> 
+
